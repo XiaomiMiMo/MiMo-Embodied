@@ -2,6 +2,16 @@
   <img src="./assets/xfmlogo.svg" width=600>
 </div>
 
+<br/>
+
+<div align="center" style="line-height: 1;">
+  |
+  <a href="https://huggingface.co/XiaomiMiMo/MiMo-Embodied-7B" target="_blank">🤗 HuggingFace</a>
+  &nbsp;|
+  <a href="https://arxiv.org/abs/2511.16518" target="_blank">📔 Technical Report</a>
+  &nbsp;|
+  <br/>
+</div>
 
 ## I. Introduction
 
@@ -117,3 +127,18 @@ Additionally, MiMo-Embodied excels in **12 autonomous driving benchmarks across 
 <div align="center">
   <img src="./assets/figure_manipulation.svg" width=800>
 </div>
+
+
+## VI. Citation
+
+```bibtex
+@misc{hao2025mimoembodiedxembodiedfoundationmodel,
+      title={MiMo-Embodied: X-Embodied Foundation Model Technical Report}, 
+      author={Xiaomi Embodied Intelligence Team},
+      year={2025},
+      eprint={2511.16518},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2511.16518}, 
+}
+```
