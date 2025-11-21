@@ -31,7 +31,7 @@
 ## III. Model Details
 
 <div align="center">
-  <img src="./assets/fig3.svg" width=800>
+  <img src="./assets/fig3_img.png" width=800>
 </div>
 
 ## IV. Evaluation Results
