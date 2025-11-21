@@ -44,7 +44,7 @@ Moreover, evaluation on **8 general visual understanding benchmarks** confirms t
 
 ### Embodied AI Benchmarks
 
-####  Affordacne & Planning
+####  Affordance & Planning
 
 <div align="center">
   <img src="./assets/table2.png" width=800>
@@ -57,7 +57,7 @@ Moreover, evaluation on **8 general visual understanding benchmarks** confirms t
 </div>
 
 
-### Autonumos Driving Benchmarks
+### Autonomous Driving Benchmarks
 
 #### Single-View Image & Multi-View Video
 
@@ -85,7 +85,7 @@ Moreover, evaluation on **8 general visual understanding benchmarks** confirms t
 
 ### Embodied AI
 
-#### Affordacne Prediction
+#### Affordance Prediction
 
 <div align="center">
   <img src="./assets/afford-1.svg" width=800>
@@ -103,7 +103,7 @@ Moreover, evaluation on **8 general visual understanding benchmarks** confirms t
   <img src="./assets/spatial-1.svg" width=800>
 </div>
 
-### Autonumos Driving
+### Autonomous Driving
 
 #### Environmental Perception
 
@@ -125,13 +125,13 @@ Moreover, evaluation on **8 general visual understanding benchmarks** confirms t
 
 ### Real-world Tasks
 
-#### Emobodied Navigation
+#### Embodied Navigation
 
 <div align="center">
   <img src="./assets/figure_navigation.svg" width=800>
 </div>
 
-#### Emobodied Manipulation
+#### Embodied Manipulation
 
 <div align="center">
   <img src="./assets/figure_manipulation.svg" width=800>
