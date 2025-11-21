@@ -81,7 +81,7 @@ Moreover, evaluation on **8 general visual understanding benchmarks** confirms t
 > Results marked with \* are obtained using our evaluation framework.
 
 
-## V. Case Visualize
+## V. Case Visualization
 
 ### Embodied AI
 
