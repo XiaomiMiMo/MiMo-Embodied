@@ -37,9 +37,11 @@
 ## IV. Evaluation Results
 
 MiMo-Embodied demonstrates superior performance across **17 benchmarks in three key embodied AI capabilities: Task Planning, Affordance Prediction, and Spatial Understanding**, significantly surpassing existing open-source embodied VLM models and rivaling closed-source models.
+
 Additionally, MiMo-Embodied excels in **12 autonomous driving benchmarks across three key capabilities: Environmental Perception, Status Prediction, and Driving Planning**—significantly outperforming both existing open-source and closed-source VLM models, as well as proprietary VLM models.
 
 Moreover, evaluation on **8 general visual understanding benchmarks** confirms that MiMo-Embodied retains and even strengthens its general capabilities, showing that domain-specialized training enhances rather than diminishes overall model proficiency.
+
 ### Embodied AI Benchmarks
 
 ####  Affordacne & Planning
