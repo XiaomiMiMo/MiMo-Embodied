@@ -1,0 +1,59 @@
+# Copyright 2025 Xiaomi Corporation.
+
+dataset_path: Zray26/maplm_test_new
+task: maplm
+test_split: test
+dataset_kwargs:
+  token: True
+
+output_type: generate_until
+img_root: "/path/to/your/image_or_video_data"
+doc_to_visual: !function utils.doc_to_visual
+doc_to_text: !function utils.doc_to_text
+doc_to_target: !function utils.doc_to_target
+process_results: !function utils.process_test_results_for_submission  
+
+lmms_eval_specific_kwargs:
+  default:
+    prompt_format: ""
+    pre_prompt: "1: <image> 2: <image> 3: <image> 4: <image>. These four images are the point cloud bev, camera front view, camera back left view, camera right view of the ego vehicle. "
+    post_prompt: ""
+
+generation_kwargs:
+  max_new_tokens: 32768
+  temperature: 0
+  do_sample: False
+
+filter_list:
+  - name: "extract"
+    filter:
+      - function: !function utils.AnswerFilter
+
+metric_list:
+  - metric: maplm_FRM
+    aggregation: !function utils.maplm_frm
+    higher_is_better: true
+  - metric: maplm_QNS
+    aggregation: !function utils.maplm_qns
+    higher_is_better: true
+  - metric: maplm_des
+    aggregation: !function utils.maplm_des
+    higher_is_better: true
+  - metric: maplm_scn
+    aggregation: !function utils.maplm_scn
+    higher_is_better: true  
+  - metric: maplm_qlt
+    aggregation: !function utils.maplm_qlt
+    higher_is_better: true
+  - metric: maplm_lan
+    aggregation: !function utils.maplm_lan
+    higher_is_better: true
+  - metric: maplm_int
+    aggregation: !function utils.maplm_int
+    higher_is_better: true
+
+metadata:
+  - version: 0.0
+
+
+

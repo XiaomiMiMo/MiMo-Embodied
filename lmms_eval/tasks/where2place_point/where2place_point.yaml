@@ -1,0 +1,24 @@
+# Copyright 2025 Xiaomi Corporation.
+
+dataset_path: Zray26/where2place_point
+task: where2place_point
+test_split: test
+dataset_kwargs:
+  token: True
+
+output_type: generate_until
+doc_to_visual: !function utils.where2place_doc_to_visual
+doc_to_text: !function utils.where2place_doc_to_text_mimo
+doc_to_target: "mask"
+generation_kwargs:
+  max_new_tokens: 32768
+  do_sample: false
+  temperature: 0.0
+# The return value of process_results will be used by metrics
+process_results: !function utils.where2place_process_results
+metric_list:
+  - metric: accuracy   
+    aggregation: !function utils.where2place_aggregate_results
+    higher_is_better: true
+metadata:
+  - version: 0.0

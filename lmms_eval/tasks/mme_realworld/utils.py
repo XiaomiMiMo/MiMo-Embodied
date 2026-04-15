@@ -1,0 +1,250 @@
+# Copyright 2025 Xiaomi Corporation.
+
+# Standard library
+import base64
+import io
+import re
+
+# Third-party
+from loguru import logger as eval_logger
+from PIL import Image
+from lmms_eval.tasks._task_utils.eval_utils import BoxedFilter
+
+TASKS = [
+    "Reasoning",
+    "Perception",
+]
+
+SUBTASKS = [
+    "Monitoring",
+    "Autonomous_Driving",
+    "OCR with Complex Context",
+    "Diagram and Table",
+    "Remote Sensing",
+]
+
+
+def decode_base64_to_image(base64_string, target_size=-1):
+    image_data = base64.b64decode(base64_string)
+    image = Image.open(io.BytesIO(image_data))
+    if image.mode in ("RGBA", "P"):
+        image = image.convert("RGB")
+    if target_size > 0:
+        image.thumbnail((target_size, target_size))
+    return image
+
+
+def mme_realworld_doc_to_visual(doc):
+    img = decode_base64_to_image(doc["bytes"])
+    return [img.convert("RGB")]
+
+
+def mme_realworld_doc_to_text(doc, lmms_eval_specific_kwargs=None):
+    question = doc["question"]
+    option_prompt = "The choices are listed below:\n" + "\n".join(doc["multi-choice options"])
+    question += " " + option_prompt
+    if "post_prompt" in lmms_eval_specific_kwargs and lmms_eval_specific_kwargs["post_prompt"]:
+        question += lmms_eval_specific_kwargs["post_prompt"]
+    return question
+
+
+def mme_realworld_doc_to_text_exact_match(doc, lmms_eval_specific_kwargs=None):
+    question = doc["question"]
+    question += " Please respond to the question with a single word or phrase.\nThe best answer is: "
+    return question
+
+
+def mme_realworld_cn_doc_to_text(doc, lmms_eval_specific_kwargs=None):
+    question = doc["question"]
+    option_prompt = "选项如下所示:\n" + "\n".join(doc["multi-choice options"])
+    question += " " + option_prompt
+    if "post_prompt" in lmms_eval_specific_kwargs and lmms_eval_specific_kwargs["post_prompt"]:
+        question += lmms_eval_specific_kwargs["post_prompt"]
+    return question
+
+
+def mme_realworld_cn_doc_to_text_exact_match(doc, lmms_eval_specific_kwargs=None):
+    question = doc["question"]
+    question += "请用一个单词或短语回答这个问题。\n最佳答案为： "
+    return question
+
+
+def extract_characters_regex(s, choices=None):
+    if choices is None:
+        choices = ["(A)", "(B)", "(C)", "(D)", "(E)"]
+    if isinstance(s, dict):
+        s = ""
+    s = s.strip()
+    answer_prefixes = [
+        "The best answer is",
+        "The correct answer is",
+        "The answer is",
+        "The answer",
+        "The best option is",
+        "The correct option is",
+        "Best answer:",
+        "Best option:",
+    ]
+    for answer_prefix in answer_prefixes:
+        s = s.replace(answer_prefix, "")
+
+    if len(s.split()) > 10 and not re.search("[ABCDE]", s):
+        return ""
+    matches = re.search(r"[ABCDE]", s)
+    if matches is None:
+        for choice in choices:
+            if s.lower() in choice.lower():
+                return choice[1]
+        return ""
+    return matches[0]
+
+
+def mme_realworld_process_results(doc, results):
+    """
+    Args:
+        doc: a instance of the eval dataset
+        results: [pred]
+    Returns:
+        a dictionary with key: metric name (in this case mme_realworld score), value: metric value
+    """
+    pred = results[0]
+    pred_ans = extract_characters_regex(pred)
+
+    category = "Perception" if "perception" in doc["category"].lower() else "Reasoning"
+    sub_category = doc["category"].split("/")[-1]
+    task_category = doc["l2-category"]
+    data_dict = {
+        "question_id": doc["index"],
+        "category": category,
+        "sub_category": sub_category,
+        "task_category": task_category,
+        "pred_answer": pred_ans,
+        "answer": doc["answer"],
+    }
+
+    return {"mme_realworld_score": data_dict}
+
+
+def get_correct_answer(sample):
+    # Replace full-width parentheses with half-width parentheses
+    sample["multi-choice options"] = [
+        option.replace("（", "(").replace("）", ")")
+        for option in sample["multi-choice options"]
+    ]
+
+    # Extract the correct answer option
+    correct_answer = next(
+        option.split(") ")[1]
+        for option in sample["multi-choice options"]
+        if option.startswith(f"({sample['answer']})")
+    )
+    return correct_answer
+
+
+def mme_realworld_exact_match(doc, results):
+    """
+    Args:
+        doc: a instance of the eval dataset
+        results: [pred]
+    Returns:
+        a dictionary with key: metric name (in this case mme_realworld score), value: metric value
+    """
+    pred_ans = results[0]
+    answer = get_correct_answer(doc)
+
+    category = "Perception" if "perception" in doc["category"].lower() else "Reasoning"
+    sub_category = doc["category"].split("/")[-1]
+    task_category = doc["l2-category"]
+    data_dict = {
+        "question_id": doc["index"],
+        "category": category,
+        "sub_category": sub_category,
+        "task_category": task_category,
+        "pred_answer": pred_ans,
+        "answer": answer,
+    }
+
+    return {"mme_realworld_exact_match": data_dict}
+
+
+def mme_realworld_aggregate_results(results):
+    """
+    Args:
+        results: a list of values returned by process_results
+    Returns:
+        A score
+    """
+    metrics = {}
+    for task in TASKS:
+        metrics[task] = {}
+        for subtask in SUBTASKS:
+            metrics[task][subtask] = {}
+
+    for result in results:
+        task = result["category"]
+        subtask = result["sub_category"]
+        category = result["task_category"].lower()
+        if "attribute" in category:
+            category = category.split("/")[0] + "/attribute"
+        cnt = (
+            result["pred_answer"].lower() == result["answer"].lower()
+            or result["answer"].lower() in result["pred_answer"].lower()
+        )
+        if category not in metrics[task][subtask]:
+            metrics[task][subtask][category] = {
+                "true": cnt,
+                "false": 1 - cnt,
+                "is_E": result["pred_answer"] == "E",
+            }
+        else:
+            metrics[task][subtask][category]["true"] += cnt
+            metrics[task][subtask][category]["false"] += 1 - cnt
+            metrics[task][subtask][category]["is_E"] += result["pred_answer"] == "E"
+
+    sum_all, succ_all = 0, 0
+    for task, tasks_values in metrics.items():
+        eval_logger.info("*" * 32 + f"{task} (Task Start)")
+        cnt_task, cnt_E, sum_task = 0, 0, 0
+        for substask, subtask_value in tasks_values.items():
+            eval_logger.info("+" * 16 + f"{substask} (Subtask Start)")
+            cnt_subtask, sum_subtask, e_subtask = 0, 0, 0
+            for category, category_dict in subtask_value.items():
+                cnt_subtask += category_dict["true"]
+                sum_subtask += category_dict["false"] + category_dict["true"]
+                e_subtask += category_dict["is_E"]
+                total = category_dict["false"] + category_dict["true"]
+                acc = category_dict["true"] / total
+                eval_logger.info(
+                    "-" * 4 + "\t"
+                    + "Acc {:.4f}".format(acc)
+                    + f"\t{category.capitalize()} ({total} items)"
+                )
+
+            if sum_subtask == 0:
+                acc_subtasks = 0
+                e_subtask = 0
+            else:
+                acc_subtasks = cnt_subtask / sum_subtask
+            eval_logger.info(
+                "+" * 16
+                + "\t Acc {:.4f}".format(acc_subtasks)
+                + f"\t E choice {e_subtask} \t{substask} ({sum_subtask} items)"
+            )
+            cnt_task += cnt_subtask
+            sum_task += sum_subtask
+            cnt_E += e_subtask
+
+        if sum_task == 0:
+            acc_task = 0
+        else:
+            acc_task = cnt_task / sum_task
+        succ_all += cnt_task
+        sum_all += sum_task
+        eval_logger.info(
+            "*" * 32
+            + "Acc {:.4f}".format(acc_task)
+            + f"\t E choice {cnt_E} \t{task} ({sum_task} items)\n"
+        )
+
+    eval_logger.info("*" * 32 + "Overall Acc {:.4f}".format(succ_all / sum_all))
+    return succ_all / sum_all

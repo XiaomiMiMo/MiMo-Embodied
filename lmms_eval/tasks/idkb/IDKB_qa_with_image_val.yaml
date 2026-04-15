@@ -1,0 +1,50 @@
+# Copyright 2025 Xiaomi Corporation.
+
+dataset_path: Zray26/idkb_qa_with_image_val
+task: IDKB_qa_with_image_val
+test_split: test
+dataset_kwargs:
+  token: True
+
+output_type: generate_until
+doc_to_visual: !function utils.doc_to_visual
+doc_to_text: !function utils.doc_to_text
+doc_to_target: !function utils.doc_to_target
+process_results: !function utils.process_test_results_for_submission  
+
+lmms_eval_specific_kwargs:
+  default:
+    prompt_format: qa
+    pre_prompt: ""
+    post_prompt: ""
+
+model_specific_target_kwargs:
+  default: "mcq"
+
+generation_kwargs:
+  max_new_tokens: 3072 
+  temperature: 0
+  do_sample: False
+
+filter_list:
+  - name: "extract"
+    filter:
+      - function: !function utils.AnswerFilter
+
+metric_list:
+  - metric: rouge_1
+    aggregation: !function utils.idkb_rouge_1
+    higher_is_better: true
+  - metric: rouge_l
+    aggregation: !function utils.idkb_rouge_l
+    higher_is_better: true
+  - metric: semscore
+    aggregation: !function utils.idkb_semscore
+    higher_is_better: true
+
+
+metadata:
+  - version: 0.0
+
+
+

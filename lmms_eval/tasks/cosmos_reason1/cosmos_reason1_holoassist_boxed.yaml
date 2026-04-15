@@ -1,0 +1,20 @@
+# Copyright 2025 Xiaomi Corporation.
+
+dataset_name: holoassist
+task: "cosmos_reason1_holoassist_boxed"
+
+lmms_eval_specific_kwargs:
+  default:
+    pre_prompt: ""
+    post_prompt: "\nAnswer with the option's letter from the given choices directly."
+
+filter_list:
+  - name: "flexible-extract"
+    filter:
+      - function: !function utils.MultiChoiceLetterRegexFilter
+        group_select: 0
+        ignore_case: true
+        ignore_punctuation: true
+        regex_pattern: "([A-Z])\\."
+
+include: _default_boxed_template_yaml

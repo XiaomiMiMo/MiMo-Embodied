@@ -1,0 +1,1 @@
+pip install -U pandas datasets streamlit decord
