@@ -1,0 +1,38 @@
+# Copyright 2025 Xiaomi Corporation.
+
+test_split: test
+dataset_kwargs:
+  token: False
+
+output_type: generate_until
+doc_to_visual: !function utils.doc_to_visual
+doc_to_text: !function utils.doc_to_text
+doc_to_target: !function utils.doc_to_target
+process_results: !function utils.process_test_results_for_submission
+
+img_root: "/path/to/your/image_or_video_data"
+
+lmms_eval_specific_kwargs:
+  default:
+    prompt_format: qa
+    pre_prompt: ""
+    post_prompt: "\nPut your final answer in \\boxed{}."
+
+generation_kwargs:
+  max_new_tokens: 32768
+  temperature: 0
+  do_sample: False
+
+filter_list:
+  - name: "extract"
+    filter:
+      - function: !function utils.AnswerFilter
+
+metric_list:
+  - metric: submission
+    aggregation: !function utils.test_aggregate_results_for_submission
+    higher_is_better: false
+
+metadata:
+  - version: 0.0
+

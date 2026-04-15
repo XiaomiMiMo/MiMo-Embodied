@@ -1,0 +1,44 @@
+# Copyright 2025 Xiaomi Corporation.
+
+dataset_path: Tianli/robovqa
+task: robovqa
+test_split: validation
+dataset_kwargs:
+  token: true
+
+img_root: "/path/to/your/image_or_video_data"
+output_type: generate_until
+doc_to_visual: !function utils.robovqa_doc_to_visual
+doc_to_text: !function utils.robovqa_doc_to_text_mimo
+doc_to_target: !function utils.robovqa_doc_to_target
+
+generation_kwargs:
+  max_new_tokens: 32768 
+  temperature: 0
+  top_p: 1.0
+  num_beams: 1
+  do_sample: false
+filter_list:
+  - name: "remove think tag"
+    filter:
+      - function: !function utils.AfterThinkFilter
+process_results: !function utils.robovqa_process_results
+metric_list:
+  - metric: robovqa_score
+    aggregation: !function utils.robovqa_aggregate_results
+    higher_is_better: true
+  - metric: robovqa_bleu1
+    aggregation: !function utils.robovqa_aggregate_results
+    higher_is_better: true
+  - metric: robovqa_bleu2
+    aggregation: !function utils.robovqa_aggregate_results
+    higher_is_better: true
+  - metric: robovqa_bleu3
+    aggregation: !function utils.robovqa_aggregate_results
+    higher_is_better: true
+  - metric: robovqa_bleu4
+    aggregation: !function utils.robovqa_aggregate_results
+    higher_is_better: true
+
+metadata:
+  version: 0.0

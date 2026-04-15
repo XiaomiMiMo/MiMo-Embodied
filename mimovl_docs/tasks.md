@@ -1,0 +1,57 @@
+# Complete List of New Tasks
+
+**Bolded tasks** are newly added benchmarks, while the rest are existing benchmarks with new evaluation settings.
+- ai2d_boxed
+- **blink_val, blink_val_boxed**
+- chartqa_boxed_gpt
+- charades, charades_boxed
+- **cii_bench, cii_bench_boxed**
+- **countbench, countbench_boxed, countbench_boxed_mimo**
+- **dynamath_test, dynamath_test_boxed, dynamath_testall_boxed**
+- docvqa_val_boxed_gpt, docvqa_test_boxed
+- infovqa_val_boxed_gpt, infovqa_test_boxed
+- **charxiv, charxiv_boxed**
+- **cvbench, cvbench_boxed**
+- egoschema_subset_boxed
+- **logicvista_test, logicvista_test_boxed**
+- longvideobench_val_v_boxed
+- **mantis, mantis_boxed**
+- mathverse_testmini_vision_only_boxed
+- mathvision_test_boxed, mathvision_testmini_boxed
+- mathvista_testmini_boxed
+- mlvu_dev_boxed, mlvu_test_boxed
+- mmbench_en_dev_boxed, mmbench_cn_dev_boxed, mmbench_en_test_boxed, mmbench_cn_test_boxed
+- **mmbench_video, mmbench_video_boxed**
+- mmerealworld_boxed, mmerealworld_cn_boxed, mmerealworld_lite_boxed
+- **mmiq (mmiq_zh, mmiq_en), mmiq_boxed (mmiq_zh, mmiq_en)**
+- mmmu_val_boxed_gpt, mmmu_val_boxed, mmmu_val_no_image, mmmu_val_reasoning_no_image
+- mmmu_pro_boxed (mmmu_pro_vision_boxed, mmmu_pro_standard_boxed)
+- **mmvu, mmvu_boxed**
+- ocrbench_boxed_gpt
+- olympiadbench_boxed, olympiadbench_all_boxed
+- **osworld_g_rec_test_mimo**
+- **pixmo_count, pixmo_count_boxed, pixmo_count_boxed_mimo**
+- refcoco_bbox_rec_val_mimo
+- refcoco+_bbox_rec_val_mimo
+- refcocog_bbox_rec_val_mimo
+- screenspot_rec_test_mimo
+- **screenspot_v2_rec_test_mimo**
+- **screenspot_pro_cn_rec_test_mimo, screenspot_pro_en_rec_test_mimo**
+- realworldqa_boxed
+- seedbench_boxed
+- seedbench_2_boxed
+- seedbench_2_plus_boxed
+- tempcompass_boxed (tempcompass_caption_matching_boxed, tempcompass_captioning_boxed, tempcompass_multi_choice_boxed, tempcompass_yes_no_boxed)
+- **visualsimpleqa, visualsimpleqa_boxed**
+- vibe_eval_boxed
+- vl_rewardbench_boxed
+- videomme_boxed
+- video_mmmu_boxed (video_mmmu_adapation_boxed, video_mmmu_comprehension_boxed, video_mmmu_perception_boxed)
+- **vlmsareblind, vlmsareblind_boxed**
+- vmcbench_boxed
+- **visulogic, visu logic_boxed**
+- **vstar_bench, vstar_bench_boxed**
+- **visualwebbench**
+- **wemath_testmini, wemath_testmini_boxed**
+- websrc_val_boxed
+- **zerobench (zerobench_ori, zerobench_subq), zerobench_boxed (zerobench_ori_boxed, zerobench_subq_boxed)**

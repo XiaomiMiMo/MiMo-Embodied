@@ -1,0 +1,40 @@
+# Copyright 2025 Xiaomi Corporation.
+
+dataset_path: nvidia/cosmos-reason1-benchmark
+dataset_kwargs:
+  token: True
+  # video: True
+img_root: "/path/to/your/image_or_video_data"
+test_split: benchmark
+output_type: generate_until
+doc_to_visual: !function utils.cosmos_reason1_doc_to_visual
+doc_to_text: !function utils.cosmos_reason1_doc_to_text
+doc_to_target: !function utils.cosmos_reason1_doc_to_target
+lmms_eval_specific_kwargs:
+  default:
+    pre_prompt: ""
+    post_prompt: "\nPut your final answer in \\boxed{}."
+
+generation_kwargs:
+  max_new_tokens: 32768
+  temperature: 0
+  do_sample: False
+
+filter_list:
+  - name: "flexible-extract"
+    filter:
+      - function: !function utils.BoxedFilter
+        group_select: 0
+        ignore_case: true
+        ignore_punctuation: true
+        regex_pattern: "([A-Z])\\."
+
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+    ignore_case: true
+    ignore_punctuation: true
+
+metadata:
+  - version: 0.0

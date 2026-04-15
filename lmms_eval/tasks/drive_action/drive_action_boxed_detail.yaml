@@ -1,0 +1,54 @@
+# Copyright 2025 Xiaomi Corporation.
+
+dataset_path: runoob1/drive-action
+task: "drive_action_boxed_detail"
+test_split: test_en
+dataset_kwargs:
+  token: True
+
+output_type: generate_until
+doc_to_visual: !function utils.drive_action_doc_to_visual
+doc_to_text: !function utils.drive_action_doc_to_text
+doc_to_target: !function utils.drive_action_doc_to_target
+
+
+lmms_eval_specific_kwargs:
+  default:
+    prompt_format: mcq
+    pre_prompt: ""
+    post_prompt: "\nPut your final answer in \\boxed{}."
+
+model_specific_target_kwargs:
+  default: "mcq"
+
+generation_kwargs:
+  max_new_tokens: 32768
+  temperature: 0
+  do_sample: False
+
+filter_list:
+  - name: "flexible-extract"
+    filter:
+      - function: !function utils.MultiChoiceBoxedRegexFilter
+        group_select: 0
+        ignore_case: true
+        ignore_punctuation: true
+        regex_pattern: "([A-Z])\\."
+# The return value of process_results will be used by metrics
+process_results: !function utils.drive_action_process_results
+metric_list:
+  - metric: drive_action_Vision_acc
+    aggregation : !function utils.drive_action_vision_acc
+    higher_is_better: true
+  - metric: drive_action_Language_acc
+    aggregation : !function utils.drive_action_language_acc
+    higher_is_better: true
+  - metric: drive_action_Action_acc
+    aggregation : !function utils.drive_action_action_acc
+    higher_is_better: true
+  - metric: drive_action_Overall_acc
+    aggregation : !function utils.drive_action_overall_acc
+    higher_is_better: true
+
+metadata:
+  - version: 0.0

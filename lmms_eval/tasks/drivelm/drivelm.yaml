@@ -1,0 +1,45 @@
+# Copyright 2025 Xiaomi Corporation.
+
+dataset_path: abing666/drivelm_online_test
+task: "drivelm"
+test_split: test
+dataset_kwargs:
+  token: True
+  
+img_root: "/path/to/your/image_or_video_data"
+output_type: generate_until
+doc_to_visual: !function utils.drivelm_doc_to_visual
+doc_to_text: !function utils.drivelm_doc_to_text
+doc_to_target: !function utils.drivelm_doc_to_target
+process_results: !function utils.drivelm_process_test_results_for_submission
+  
+lmms_eval_specific_kwargs:
+  default:
+    prompt_format: qa
+    pre_prompt: "1: <image> 2: <image> 3: <image> 4: <image> 5: <image> 6: <image>. These six images are the front view, front left view, front right view, back view, back left view and back right view of the ego vehicle. "
+    post_prompt: ""
+    tag00_post_prompt: ""
+    tag01_post_prompt: ""
+    norm: False
+
+model_specific_target_kwargs:
+  default: "mcq"
+
+generation_kwargs:
+  max_new_tokens: 32768
+  temperature: 0
+  do_sample: False
+
+filter_list:
+  - name: "extract"
+    filter:
+      - function: !function utils.DriveLmFilter
+        unnorm: False
+
+metric_list:
+  - metric: submission
+    aggregation: !function utils.drivelm_test_aggregate_results_for_submission
+    higher_is_better: false
+
+metadata:
+  - version: 0.0

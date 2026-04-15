@@ -1,0 +1,3 @@
+# Copyright 2025 Xiaomi Corporation.
+
+model_path: "/path/to/your/Lingo-Judge-safetensors"

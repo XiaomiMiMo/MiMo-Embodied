@@ -1,0 +1,39 @@
+# Copyright 2025 Xiaomi Corporation.
+
+dataset_path: Zray26/nuinstruct_test_reasoningtask
+task: nuinstruct
+test_split: test
+dataset_kwargs:
+  token: True
+
+img_root: "/path/to/your/image_or_video_data"
+output_type: generate_until
+
+doc_to_visual: !function utils.doc_to_visual_as_videos
+doc_to_text: !function utils.doc_to_text
+doc_to_target: !function utils.doc_to_target
+process_results: !function utils.process_results_bleu
+
+lmms_eval_specific_kwargs:
+  default:
+    prompt_format: ""
+    pre_prompt: "1: <image> 2: <image> 3: <image> 4: <image> 5: <image> 6: <image>. These six videos are the front view, front left view, front right view, back view, back left view and back right view of the ego vehicle. "
+    post_prompt: ""
+
+generation_kwargs:
+  max_new_tokens: 32768
+  temperature: 0
+  do_sample: False
+
+filter_list:
+  - name: "extract"
+    filter:
+      - function: !function utils.AnswerFilter
+
+metric_list:
+  - metric: bleu
+    aggregation: !function utils.aggregate_bleu_result
+    higher_is_better: true
+
+metadata:
+  - version: 0.0

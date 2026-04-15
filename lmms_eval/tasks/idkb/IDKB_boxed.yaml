@@ -1,0 +1,10 @@
+# Copyright 2025 Xiaomi Corporation.
+
+group: idkb
+task:
+- IDKB_multi_no_image_val
+- IDKB_multi_with_image_val
+- IDKB_qa_no_image_val
+- IDKB_qa_with_image_val
+- IDKB_single_no_image_val
+- IDKB_single_with_image_val

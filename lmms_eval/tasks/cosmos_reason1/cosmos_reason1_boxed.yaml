@@ -1,0 +1,9 @@
+# Copyright 2025 Xiaomi Corporation.
+
+group: cosmos_reason1_boxed
+task:
+- cosmos_reason1_agibot_boxed
+- cosmos_reason1_bridgev2_boxed
+- cosmos_reason1_holoassist_boxed
+- cosmos_reason1_robofail_boxed
+- cosmos_reason1_robovqa_boxed

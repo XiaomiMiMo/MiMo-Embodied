@@ -1,0 +1,6 @@
+# Copyright 2025 Xiaomi Corporation.
+
+test_split: test
+output_type: generate_until
+img_root: "/path/to/your/image_or_video_data"
+model_path: "/path/to/your/all-MiniLM-L6-v2"

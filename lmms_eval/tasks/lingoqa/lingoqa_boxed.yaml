@@ -1,0 +1,33 @@
+# Copyright 2025 Xiaomi Corporation.
+
+dataset_path: runoob1/lingoqa
+task: lingoqa_boxed
+test_split: test
+dataset_kwargs:
+  token: True
+
+output_type: generate_until
+doc_to_visual: !function utils.lingoqa_doc_to_visual
+doc_to_text: !function utils.lingoqa_doc_to_text
+doc_to_target: "answer"
+  
+lmms_eval_specific_kwargs:
+  default:
+    prompt_format: ""
+    pre_prompt: ""
+    post_prompt: "\nPut your final answer in \\boxed{}."
+
+generation_kwargs:
+  max_new_tokens: 32768
+  temperature: 0
+  do_sample: False
+
+# The return value of process_results will be used by metrics
+process_results: !function utils.lingo_process_results
+metric_list:
+  - metric: lingo_judge_acc
+    aggregation: !function utils.lingo_aggregate_judge_results
+    higher_is_better: true
+
+metadata:
+  - version: 0.0

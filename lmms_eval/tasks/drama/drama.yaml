@@ -1,0 +1,29 @@
+# Copyright 2025 Xiaomi Corporation.
+
+dataset_path: runoob1/drama
+task: "drama"
+test_split: test
+dataset_kwargs:
+  token: True
+
+img_root: "/path/to/your/image_or_video_data"
+output_type: generate_until
+doc_to_visual: !function utils.drama_doc_to_visual
+doc_to_text: !function utils.drama_doc_to_text
+doc_to_target: bbox
+
+generation_kwargs:
+  max_new_tokens: 3072
+  do_sample: false
+  temperature: 0.0
+
+# The return value of process_results will be used by metrics
+process_results: !function utils.drama_process_results
+
+metric_list:
+  - metric: drama_ACC@0.5
+    aggregation: !function utils.drama_aggregate_results
+    higher_is_better: true
+metadata:
+  - version: 0.0
+

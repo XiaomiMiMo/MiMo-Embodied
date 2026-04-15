@@ -1,0 +1,6 @@
+# Copyright 2025 Xiaomi Corporation.
+
+group: mme_realworld
+task:
+- mmerealworld_boxed
+- mmerealworld_cn_boxed
